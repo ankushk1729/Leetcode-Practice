@@ -1,8 +1,14 @@
-#include<bits/stdc++.h>
+// 103. Binary Tree Zigzag Level Order Traversal
 
+/*
+    Input: root = [3,9,20,null,null,15,7]
+    Output: [[3],[20,9],[15,7]]
+*/
+
+#include<bits/stdc++.h>
 using namespace std;
 
-  struct TreeNode {
+ struct TreeNode {
       int val;
       TreeNode *left;
       TreeNode *right;
@@ -10,57 +16,48 @@ using namespace std;
       TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
       TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
   };
- 
-class Solution {
-public:
-    void addRow(TreeNode* root,int val){
-        TreeNode* leftChild = root->left;
-        TreeNode* rightChild = root->right;
-        
-        TreeNode* rowleft = new TreeNode(val);
-        TreeNode* rowright = new TreeNode(val);
-        
-        root->left = rowleft;
-        root->right = rowright;
-        
-        rowleft->left = leftChild;
-        rowright->right = rightChild;
 
-    }
-    TreeNode* addOneRow(TreeNode* root, int val, int depth) {
-        if(depth == 1){
-            TreeNode* newRoot = new TreeNode(val);
-            newRoot->left = root;
-            return newRoot;
-        }
-        
-        int dep = 1;
-        
-        queue<TreeNode*> q;
-        q.push(root);
-        
-        while(q.size()){
-            int size = q.size();
-            
-            if(dep == depth-1){
-                for(int i = 0;i<size;i++){
-                    TreeNode* front = q.front();
-                    q.pop();
-                    addRow(front,val);
-                }
-                break;
-            }
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+       vector<vector<int>> ans;
+    if(root == NULL) return ans;
+    queue<TreeNode*> q;
+    q.push(root);
+    bool flag = true;
+    stack<int> s;
+    while(q.size()){
+        int size = q.size();
+        vector<int> v;
+        if(flag == true){
             for(int i = 0;i<size;i++){
                 TreeNode* front = q.front();
                 q.pop();
+                v.push_back(front->val);
+                
                 if(front->left) q.push(front->left);
                 if(front->right) q.push(front->right);
             }
-            dep++;
         }
-        return root;
+        else {
+            for(int i = 0;i<size;i++){
+                TreeNode* front = q.front();
+                q.pop();
+            
+                s.push(front->val);
+                
+                if(front->left) q.push(front->left);
+                if(front->right) q.push(front->right);
+            }
+            while(s.size()){
+                int val = s.top();
+                s.pop();
+                v.push_back(val);
+            }
+        }
+        ans.push_back(v);
+        flag = flag ? false : true;
     }
-};
+    return ans; 
+    }
 
 
 
@@ -98,18 +95,17 @@ TreeNode* takeInputLevelWise() {
     }
     return root;
 
-}
-
+}  
+ 
 int main(){
-    Solution *obj1 = new Solution();
+    TreeNode* root = takeInputLevelWise();
+    vector<vector<int>> v = zigzagLevelOrder(root);
 
-    TreeNode* root =takeInputLevelWise();
-    int val,depth;
-    cout<<"Enter val"<<endl;
-    cin>>val;
-    cout<<"Enter depth"<<endl;
-    cin>>depth;
-    
-    obj1->addOneRow(root,val,depth);
+    for(auto x:v){
+        for(auto y:x){
+            cout<<y<<" ";
+        }
+        cout<<endl;
+    }
     return 0;
 }

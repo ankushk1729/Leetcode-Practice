@@ -1,4 +1,6 @@
-// Problem - 162. Find Peak Element
+//162. Find Peak Element
+
+
 
 
 #include<bits/stdc++.h>
@@ -38,7 +40,7 @@ using namespace std;
     }
 	
 
-// Striver's Solution
+// Second's Solution
 
 int findPeakElement2(vector<int>& nums){
 	int low = 0,high = nums.size()-1;
