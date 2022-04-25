@@ -1,5 +1,8 @@
 // 307. Range Sum Query - Mutable
 
+
+// Solution using segment trees.
+
 /*
     Input
     ["NumArray", "sumRange", "update", "sumRange"]
@@ -18,6 +21,8 @@ public:
     int n;
     NumArray(vector<int>& nums) {
         n = nums.size();
+
+        // Because max nodes or indexes in segment tree can be 4*n [There is a proof for that].
         seg.resize(4*n+1);
         for(auto x:nums) arr.push_back(x);
         build(0,0,n-1);
@@ -30,13 +35,17 @@ public:
         }
         int mid = (low + high) / 2;
         
+        // Recursively building left and right subtree.
         build(2*ind+1,low,mid);
         build(2*ind+2,mid+1,high);
         
         seg[ind] = seg[2*ind+1] + seg[2*ind+2];
     }
     
+    // Updates the segment tree
     void updateH(int ind,int low,int high,int i,int val){
+
+        // Base case for recursion - We have finally reached the index for which we want to update the value.
         if(low == high){
             seg[ind] = val;
             return;
@@ -46,7 +55,7 @@ public:
         
         // Checking if index exits in left subtree
         if(i<=mid) updateH(2*ind+1,low,mid,i,val);
-        
+
         // Else it exists in right subtree
         else updateH(2*ind+2,mid+1,high,i,val);
         
@@ -68,8 +77,10 @@ public:
         // [l low high r]
         if(l <= low && high <= r) return seg[ind];
         
+        // Partial overlaping
         int mid = (low + high) / 2;
         
+        // Querying the answer from left and right subtree.
         int left = query(2*ind+1,low,mid,l,r);
         int right = query(2*ind+2,mid+1,high,l,r);
         
