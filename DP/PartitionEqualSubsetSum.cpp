@@ -15,7 +15,7 @@ using namespace std;
 // Space Complexity - O(target) [prev vector]
 bool checkSubsetSum(int k,vector<int>& nums){
 	int n = nums.size();
-
+	
 	vector<bool> prev(k+1,0),curr(k+1,0);
 
 	// Because for every index i if target sum is 0 then it is a valid solution.
